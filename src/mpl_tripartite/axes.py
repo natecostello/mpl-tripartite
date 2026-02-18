@@ -43,7 +43,7 @@ class TripartiteAxes(Axes):
         *args,
         v_unit: str = "in/s",
         diag_grid: bool = True,
-        xlabel: str = "Frequency (Hz)",
+        xlabel: Optional[str] = None,
         ylabel: Optional[str] = None,
         neg_diag_label: str = "g",
         pos_diag_label: Optional[str] = None,
@@ -72,14 +72,10 @@ class TripartiteAxes(Axes):
         super().clear()
         self.set_xscale("log")
         self.set_yscale("log")
-        v_unit = self._tri_v_unit
-        self.set_xlabel(self._tri_xlabel)
-        ylabel = (
-            self._tri_ylabel
-            if self._tri_ylabel is not None
-            else f"Pseudo-Velocity ({v_unit})"
-        )
-        self.set_ylabel(ylabel)
+        if self._tri_xlabel is not None:
+            self.set_xlabel(self._tri_xlabel)
+        if self._tri_ylabel is not None:
+            self.set_ylabel(self._tri_ylabel)
         self.grid(True, which="both", ls=":", lw=0.5, alpha=0.4)
 
     # ── draw override: inject diagonal artists per frame ──────────────
@@ -347,8 +343,6 @@ class TripartiteAxes(Axes):
         self._tri_g0 = G0_SI if base_len == "m" else G0_IN
         if self._tri_ylabel is not None:
             self.set_ylabel(self._tri_ylabel)
-        else:
-            self.set_ylabel(f"Pseudo-Velocity ({v_unit})")
         self.stale = True
 
     def set_diag_grid(self, visible: bool):

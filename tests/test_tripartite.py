@@ -257,11 +257,19 @@ class TestEdgeCases:
         plt.close(fig)
 
     def test_set_v_unit_relabels(self):
-        fig, ax = plt.subplots(subplot_kw=dict(projection="tripartite"))
+        fig, ax = plt.subplots(
+            subplot_kw=dict(
+                projection=TripartiteProjection(
+                    v_unit="in/s",
+                    ylabel="Velocity (in/s)",
+                )
+            )
+        )
         assert "in/s" in ax.get_ylabel()
         ax.set_v_unit("m/s")
         assert ax._tri_base_len == "m"
-        assert "m/s" in ax.get_ylabel()
+        # Custom ylabel is preserved by set_v_unit
+        assert ax.get_ylabel() == "Velocity (in/s)"
         plt.close(fig)
 
     def test_set_diag_grid_toggle(self):
@@ -332,12 +340,11 @@ class TestCustomLabels:
         fig.canvas.draw()  # must not raise
         plt.close(fig)
 
-    def test_default_labels_unchanged(self):
-        """Default projection still produces SRS labels."""
+    def test_default_no_labels(self):
+        """Default projection does not set axis labels."""
         fig, ax = plt.subplots(subplot_kw=dict(projection="tripartite"))
-        assert ax.get_xlabel() == "Frequency (Hz)"
-        assert "Pseudo-Velocity" in ax.get_ylabel()
-        assert "in/s" in ax.get_ylabel()
+        assert ax.get_xlabel() == ""
+        assert ax.get_ylabel() == ""
         plt.close(fig)
 
     def test_format_coord_custom_labels(self):

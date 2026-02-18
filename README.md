@@ -23,6 +23,8 @@ freq = np.logspace(1, 4, 200)
 pv = 20 / (2 * np.pi * freq)  # constant acceleration curve
 ax.loglog(freq, pv, label='100 g')
 
+ax.set_xlabel('Frequency (Hz)')
+ax.set_ylabel('Pseudo-Velocity (in/s)')
 ax.set_xlim(10, 10000)
 ax.set_ylim(0.1, 100)
 ax.legend()
@@ -37,6 +39,7 @@ from mpl_tripartite import TripartiteProjection
 fig, ax = plt.subplots(subplot_kw=dict(
     projection=TripartiteProjection(
         v_unit='m/s',
+        xlabel='Frequency (Hz)',
         ylabel='Sv (m/s)',
         neg_diag_label='m/s²',
         pos_diag_label='m',
