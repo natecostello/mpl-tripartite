@@ -29,9 +29,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ncos/mpl-tripartite"
-Repository = "https://github.com/ncos/mpl-tripartite"
-Issues = "https://github.com/ncos/mpl-tripartite/issues"
+Homepage = "https://github.com/natecostello/mpl-tripartite"
+Repository = "https://github.com/natecostello/mpl-tripartite"
+Issues = "https://github.com/natecostello/mpl-tripartite/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
