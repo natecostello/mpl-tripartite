@@ -48,6 +48,28 @@ fig, ax = plt.subplots(subplot_kw=dict(
 ))
 ```
 
+## Development
+
+This project uses [uv](https://docs.astral.sh/uv/) as its dev/build runner and [ruff](https://docs.astral.sh/ruff/) for linting and formatting.
+
+```bash
+# install dev environment
+uv sync
+
+# run tests
+uv run pytest
+
+# lint + format
+uv run ruff check .
+uv run ruff format .
+
+# type-check
+uv run mypy src
+
+# build sdist + wheel
+uv build
+```
+
 ## License
 
 MIT

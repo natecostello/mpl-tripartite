@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Any
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -15,16 +15,13 @@ from ._helpers import (
     G0_IN,
     G0_SI,
     _base_len_from_v_unit,
-    _clip_segment_to_rect,
     _decade_level_sets,
 )
 
 # ── Default styling ──────────────────────────────────────────────────
 
-_DIAG_LINE_KW: Dict[str, Any] = dict(
-    colors="0.8", linewidths=0.6, linestyles=":", zorder=0.5
-)
-_DIAG_LABEL_KW: Dict[str, Any] = dict(color="0.35", fontsize=8, va="center", zorder=2.5)
+_DIAG_LINE_KW: dict[str, Any] = dict(colors="0.8", linewidths=0.6, linestyles=":", zorder=0.5)
+_DIAG_LABEL_KW: dict[str, Any] = dict(color="0.35", fontsize=8, va="center", zorder=2.5)
 _LABEL_NUDGE_PX = 10.0  # pixels above the line
 
 
@@ -43,17 +40,17 @@ class TripartiteAxes(Axes):
         *args,
         v_unit: str = "in/s",
         diag_grid: bool = True,
-        xlabel: Optional[str] = None,
-        ylabel: Optional[str] = None,
+        xlabel: str | None = None,
+        ylabel: str | None = None,
         neg_diag_label: str = "g",
-        pos_diag_label: Optional[str] = None,
+        pos_diag_label: str | None = None,
         g_normalize: bool = True,
         **kwargs,
     ):
         self._tri_v_unit = v_unit
         self._tri_diag_grid = diag_grid
-        self._tri_diag_style: Dict[str, Any] = {}
-        self._tri_label_style: Dict[str, Any] = {}
+        self._tri_diag_style: dict[str, Any] = {}
+        self._tri_label_style: dict[str, Any] = {}
         # Validate unit early
         base_len = _base_len_from_v_unit(v_unit)
         self._tri_g0 = G0_SI if base_len == "m" else G0_IN
@@ -101,7 +98,7 @@ class TripartiteAxes(Axes):
 
     # ── diagonal grid construction ────────────────────────────────────
 
-    def _make_diagonal_grid_artists(self) -> List:
+    def _make_diagonal_grid_artists(self) -> list:
         fmin, fmax = self.get_xlim()
         vmin, vmax = self.get_ylim()
         if fmin <= 0 or fmax <= 0 or vmin <= 0 or vmax <= 0:
@@ -133,7 +130,7 @@ class TripartiteAxes(Axes):
         line_kw = {**_DIAG_LINE_KW, **self._tri_diag_style}
         label_kw = {**_DIAG_LABEL_KW, **self._tri_label_style}
 
-        artists: List = []
+        artists: list = []
 
         # ── acceleration segments (slope -1 in log-log) ──────────────
         acc_segs = []
@@ -157,7 +154,6 @@ class TripartiteAxes(Axes):
 
         # ── acceleration labels (right edge) ─────────────────────────
         log_frange = math.log10(fmax) - math.log10(fmin)
-        log_vrange = math.log10(vmax) - math.log10(vmin)
         f_right = 10 ** (math.log10(fmax) - 0.02 * log_frange)
         f_left = 10 ** (math.log10(fmin) + 0.02 * log_frange)
 
@@ -194,9 +190,7 @@ class TripartiteAxes(Axes):
             if not (vmin <= v_nudged <= vmax):
                 continue
             pos_label = (
-                self._tri_pos_diag_label
-                if self._tri_pos_diag_label is not None
-                else disp_unit
+                self._tri_pos_diag_label if self._tri_pos_diag_label is not None else disp_unit
             )
             txt = Text(
                 f_left,
@@ -224,7 +218,7 @@ class TripartiteAxes(Axes):
         vmin: float,
         vmax: float,
         n_pts: int = 60,
-    ) -> Optional[list]:
+    ) -> list | None:
         """Return polyline points for one diagonal, clipped to view, or None.
 
         Uses *n_pts* log-spaced points so the line follows the true curve
@@ -378,9 +372,7 @@ class TripartiteProjection:
         self.extra_kw = kwargs
 
     def _as_mpl_axes(self):
-        return TripartiteAxes, dict(
-            v_unit=self.v_unit, diag_grid=self.diag_grid, **self.extra_kw
-        )
+        return TripartiteAxes, dict(v_unit=self.v_unit, diag_grid=self.diag_grid, **self.extra_kw)
 
 
 # ── Register projection on import ────────────────────────────────────
