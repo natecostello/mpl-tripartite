@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-from typing import List, Optional, Tuple
 
 G0_SI: float = 9.80665  # Standard gravity in m/s²
 G0_IN: float = 386.08858267716535  # Standard gravity in in/s²
@@ -21,9 +20,7 @@ def _base_len_from_v_unit(v_unit: str) -> str:
     raise ValueError(f"v_unit must be 'm/s' or 'in/s', got '{v_unit}'")
 
 
-def _decade_level_sets(
-    min_val: float, max_val: float
-) -> Tuple[List[float], List[float]]:
+def _decade_level_sets(min_val: float, max_val: float) -> tuple[list[float], list[float]]:
     """Return (major_decades, all_sub_decade_levels) for a value range.
 
     Major decades are powers of 10.  All levels include 1..9 × 10^k for every
@@ -42,8 +39,8 @@ def _decade_level_sets(
     except (ValueError, OverflowError):
         return [], []
 
-    majors: List[float] = [10.0**k for k in range(kmin, kmax + 1)]
-    all_levels: List[float] = []
+    majors: list[float] = [10.0**k for k in range(kmin, kmax + 1)]
+    all_levels: list[float] = []
     for k in range(kmin, kmax + 1):
         decade = 10.0**k
         for d in range(1, 10):
@@ -63,9 +60,7 @@ def _decade_level_sets(
 _INSIDE, _LEFT, _RIGHT, _BOTTOM, _TOP = 0, 1, 2, 4, 8
 
 
-def _outcode(
-    x: float, y: float, xmin: float, xmax: float, ymin: float, ymax: float
-) -> int:
+def _outcode(x: float, y: float, xmin: float, xmax: float, ymin: float, ymax: float) -> int:
     code = _INSIDE
     if x < xmin:
         code |= _LEFT
@@ -87,7 +82,7 @@ def _clip_segment_to_rect(
     xmax: float,
     ymin: float,
     ymax: float,
-) -> Optional[Tuple[float, float, float, float]]:
+) -> tuple[float, float, float, float] | None:
     """Cohen-Sutherland clip of segment (x0,y0)-(x1,y1) to rect.
 
     All coordinates are in log10 space.  Returns clipped (x0,y0,x1,y1) or None.

@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 
-import mpl_tripartite
 from mpl_tripartite import TripartiteAxes, TripartiteProjection
 from mpl_tripartite._helpers import (
     G0_IN,
@@ -115,9 +114,7 @@ class TestRegistration:
         plt.close(fig)
 
     def test_v_unit_m_s(self):
-        fig, ax = plt.subplots(
-            subplot_kw=dict(projection=TripartiteProjection(v_unit="m/s"))
-        )
+        fig, ax = plt.subplots(subplot_kw=dict(projection=TripartiteProjection(v_unit="m/s")))
         assert isinstance(ax, TripartiteAxes)
         assert ax._tri_v_unit == "m/s"
         assert ax._tri_g0 == G0_SI
@@ -165,18 +162,14 @@ class TestRendering:
         plt.close(fig)
 
     def test_diag_grid_false(self):
-        fig, ax = plt.subplots(
-            subplot_kw=dict(projection=TripartiteProjection(diag_grid=False))
-        )
+        fig, ax = plt.subplots(subplot_kw=dict(projection=TripartiteProjection(diag_grid=False)))
         ax.set_xlim(10, 10000)
         ax.set_ylim(0.1, 100)
         fig.canvas.draw()
         plt.close(fig)
 
     def test_metric_units_render(self):
-        fig, ax = plt.subplots(
-            subplot_kw=dict(projection=TripartiteProjection(v_unit="m/s"))
-        )
+        fig, ax = plt.subplots(subplot_kw=dict(projection=TripartiteProjection(v_unit="m/s")))
         freq = np.logspace(0, 3, 50)
         pv = 0.5 / (2 * np.pi * freq)
         ax.loglog(freq, pv)
@@ -406,9 +399,7 @@ class TestGNormalize:
 
     def test_g_normalize_true_format_coord(self):
         """With g_normalize=True (default), accel is divided by g0."""
-        fig, ax = plt.subplots(
-            subplot_kw=dict(projection=TripartiteProjection(v_unit="m/s"))
-        )
+        fig, ax = plt.subplots(subplot_kw=dict(projection=TripartiteProjection(v_unit="m/s")))
         TWO_PI = 2 * math.pi
         s = ax.format_coord(100, 1.0)
         expected_a = TWO_PI * 100 * 1.0 / G0_SI
